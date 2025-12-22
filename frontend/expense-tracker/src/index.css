@@ -14,8 +14,28 @@
     font-family: var(--font-display);
   }
   
-body{
-  background-color:#fcfbfc;
-  overflow-x:hidden;
+  body{
+    background-color:#fcfbfc;
+    overflow-x:hidden;
+  }
+
+  label{
+    @apply block text-sm font-medium text-gray-800 mb-2;
+  }
 }
+
+.input-box{
+  @apply w-full flex items-center justify-between gap-2 px-4 py-3 bg-slate-100 border border-slate-200 rounded-lg text-sm text-gray-900 outline-none transition-all duration-200 focus-within:ring-2 focus-within:ring-violet-500/50 mb-6;
+}
+
+.input-box input{
+  @apply flex-1 bg-transparent outline-none text-gray-900 placeholder-gray-400;
+}
+
+.input-box input::placeholder{
+  @apply text-gray-400;
+}
+
+.btn-primary{
+  @apply w-full py-3 px-4 text-base font-semibold text-white bg-gradient-to-r from-violet-500 to-purple-600 rounded-lg shadow-lg shadow-purple-500/30 transition-all duration-200 hover:shadow-xl hover:shadow-purple-500/40 active:scale-95 mb-4;
 }
