@@ -1,27 +1,30 @@
-import React, {useState} from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import AuthLayout from '../../components/layouts/AuthLayout';
 import Input from '../../components/Inputs/Input';
 import ProfilePhotoSelector from '../../components/Inputs/ProfilePhotoSelector';
 import { validateEmail } from '../../utils/helper';
+import axiosInstance from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPaths';
+import { UserContext } from '../../context/userContext';
 
 
-const  SignUp = () => {
+const SignUp = () => {
   const [profilePic, setProfilePic] = useState(null);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   
   const [error, setError] = useState(null);
-
+  const context = useContext(UserContext);
+  const updateUser = context?.updateUser || (() => {});
   const navigate = useNavigate();
+
 
   // Handle sign-up form submission
   const handleSignUp = async (e) => {
     e.preventDefault();
-
-  let profileImageUrl="";
 
     if (!fullName.trim()) {
       setError("Please enter your full name.");
@@ -40,9 +43,40 @@ const  SignUp = () => {
 
     setError("");
 
-    // TODO: Integrate with Sign Up API
-    // On success, navigate to login
-    navigate('/login');
+    try {
+      let profileImageUrl = "";
+      
+      // Upload profile image if selected
+      if (profilePic) {
+        const formData = new FormData();
+        formData.append('image', profilePic);
+        const imageResponse = await axiosInstance.post(API_PATHS.IMAGE.UPLOAD_IMAGE, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        profileImageUrl = imageResponse.data.imageUrl;
+      }
+
+      // Register user
+      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
+        fullName,
+        email,
+        password,
+        profileImageUrl: profileImageUrl,
+      });
+
+      const { token, user } = response.data;
+      if (token) {
+        localStorage.setItem('token', token);
+        updateUser(user);
+        navigate('/home');
+      }
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    }
   };
 
   return (
@@ -97,20 +131,6 @@ const  SignUp = () => {
             </Link>
           </p>
         </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       </div>
       </AuthLayout>
