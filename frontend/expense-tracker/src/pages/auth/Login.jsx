@@ -4,11 +4,16 @@ import { Link } from 'react-router-dom';
 import AuthLayout from '../../components/layouts/AuthLayout';
 import Input from '../../components/Inputs/Input';
 import { validateEmail } from '../../utils/helper';
+import axiosInstance from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPaths';
+import { UserContext } from '../../context/userContext';
 
 function Login() {
 const[email,setEmail]=React.useState("");
 const[password,setPassword]=React.useState("");
 const [error,setError]=React.useState("");
+const context = React.useContext(UserContext);
+const updateUser = context?.updateUser || (() => {});
 
 const navigate = useNavigate();
 
@@ -28,11 +33,34 @@ const navigate = useNavigate();
         setError("");
 
         //Login API Call
+        try {
+            console.log('Attempting login with:', { email, password });
+            const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+                email,
+                password,
+            });
 
+            console.log('Login response:', response.data);
+            const { token, user } = response.data;
 
+            if (token) {
+                // Store token in localStorage
+                localStorage.setItem('token', token);
+                updateUser(user);
+                navigate('/home');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            console.error('Error response:', error.response?.data);
+            if (error.response && error.response.data && error.response.data.message) {
+                setError(error.response.data.message);
+            } else {
+                setError("Something went wrong. Please try again.");
+            }
+        }
 
-
-    }
+    // Close handler
+    };
 
   return (
     <AuthLayout>
@@ -64,22 +92,13 @@ const navigate = useNavigate();
             LOGIN
           </button>
 
-        <p className="text-[13px] text-slate-800 mt-3">
-          Don't have an account?{""}
-          <Link className="font-medium text-primary underline" to="/signup">
-            Sign Up
-          </Link>
-          
-
-
-        </p>
-
-
-
-
-      </form>
-
-
+          <p className="text-[13px] text-slate-800 mt-3">
+            Don't have an account?{" "}
+            <Link className="font-medium text-primary underline" to="/signup">
+              Sign Up
+            </Link>
+          </p>
+        </form>
        </div>
     </AuthLayout>
   );
