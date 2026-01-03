@@ -52,7 +52,13 @@ exports.loginUser = async (req, res) => {
     try {
         //Check if user exists
         const user = await User.findOne({ email });
-        if (!user || !(await user.comparePassword(password))) {
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+        
+        // Compare password
+        const isPasswordValid = await user.comparePassword(password);
+        if (!isPasswordValid) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
@@ -62,7 +68,8 @@ exports.loginUser = async (req, res) => {
             token: generateToken(user._id),
         });
     } catch (err) {
-        res.status(500).json({ message: " Error logging in", error: err.message });
+        console.error('Login error:', err);
+        res.status(500).json({ message: "Error logging in", error: err.message });
     }
 
 
@@ -79,6 +86,6 @@ exports.getUserInfo = async (req, res) => {
 
     res.status(200).json(user);
  } catch (err) {
-    res.status(500).json({ message: " Error registering user info", error: err.message });
+    res.status(500).json({ message: "Error getting user info", error: err.message });
  }
 };
