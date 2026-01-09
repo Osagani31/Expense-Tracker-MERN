@@ -132,6 +132,20 @@ const SignUp = () => {
           </p>
         </form>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       </div>
       </AuthLayout>
   );
