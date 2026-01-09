@@ -32,6 +32,10 @@ const navigate = useNavigate();
         }
         setError("");
 
+
+
+
+
         //Login API Call
         try {
             console.log('Attempting login with:', { email, password });
@@ -61,6 +65,9 @@ const navigate = useNavigate();
 
     // Close handler
     };
+
+
+    
 
   return (
     <AuthLayout>
