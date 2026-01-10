@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
     },
 });
 
-// Add a request interceptor to include the token in headers
+// Adding a request interceptor to include the token in headers
 axiosInstance.interceptors.request.use(
     (config) => {
         const accessToken = localStorage.getItem('token');
@@ -24,7 +24,7 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-// Add a response interceptor to handle responses globally
+// Adding a response interceptor to handle responses globally
 
 axiosInstance.interceptors.response.use(
     (response) => {
@@ -32,7 +32,7 @@ axiosInstance.interceptors.response.use(
     },
     (error) => {
         if (error.response) {
-            // You can handle specific status codes here
+           
             if (error.response.status === 401) {
                window.location.href = '/login'; // Redirect to login on 401 Unauthorized
             }else if (error.response.status === 500) {
