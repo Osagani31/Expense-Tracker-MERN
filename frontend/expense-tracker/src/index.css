@@ -17,6 +17,13 @@
   body{
     background-color:#fcfbfc;
     overflow-x:hidden;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #root{
+    min-height: 100vh;
+    width: 100%;
   }
 
   label{
@@ -38,4 +45,12 @@
 
 .btn-primary{
   @apply w-full py-3 px-4 text-base font-semibold text-white bg-gradient-to-r from-violet-500 to-purple-600 rounded-lg shadow-lg shadow-purple-500/30 transition-all duration-200 hover:shadow-xl hover:shadow-purple-500/40 active:scale-95 mb-4;
+}
+
+.card{
+  @apply bg-white rounded-lg shadow-gray-100 border border-gray-200/50;
+}
+
+.card-btn{
+  @apply flex items-center gap-3 text-[12px] font-medium text-gray-700 hover:text-purple-500 bg-gray-50 hover:bg-purple-50 px-4 py-1.5 rounded-lg border border-gray-200/50 cursor-pointer;
 }
