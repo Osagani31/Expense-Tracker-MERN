@@ -1,5 +1,4 @@
-# Expense Tracker App - Frontend
-
+# Spendly
 A modern React-based frontend for the Expense Tracker application built with Vite, Tailwind CSS, and Recharts.
 
 
